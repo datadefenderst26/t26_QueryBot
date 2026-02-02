@@ -21,11 +21,13 @@ const handleSubmit = async (e: React.FormEvent) => {
   setIsLoading(true);
 
   try {
-    const res = await fetch('http://localhost:5000/api/auth/login', {
+    const res = await fetch('http://127.0.0.1:5000/api/auth/login', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
   body: JSON.stringify({ email, password }),
 });
+
 
     const data = await res.json();
 
@@ -37,9 +39,12 @@ const handleSubmit = async (e: React.FormEvent) => {
     // SUCCESS
     navigate('/', { state: { isAdmin: data.user.role === 'admin' } });
 
-  } catch (err) {
-    alert('Backend not reachable');
-  } finally {
+  }  catch (err) {
+  console.error('FETCH ERROR:', err);
+  alert('Backend not reachable');
+}
+
+   finally {
     setIsLoading(false);
   }
 };

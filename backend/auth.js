@@ -1,40 +1,53 @@
 import express from 'express';
+import db from "./db.js";
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { db } from './db.js';
 
 const router = express.Router();
-const JWT_SECRET = 'dev_secret';
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password, role } = req.body;
 
-  const [rows] = await db.query(
-    'SELECT id, email, password, role FROM users WHERE email = ?',
-    [email]
-  );
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Missing credentials' });
+    }
 
-  if (rows.length === 0) {
-    return res.status(401).json({ message: 'Invalid credentials' });
+    const [rows] = await db.query(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const user = rows[0];
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // OPTIONAL role check
+    if (role && user.role !== role) {
+      return res.status(403).json({ message: 'Unauthorized role' });
+    }
+
+    res.json({
+      message: 'Login successful',
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
-
-  const user = rows[0];
-  const valid = await bcrypt.compare(password, user.password);
-
-  if (!valid) {
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }
-
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    JWT_SECRET,
-    { expiresIn: '1d' }
-  );
-
-  res.json({
-    token,
-    user: { email: user.email, role: user.role }
-  });
 });
 
 export default router;
+
+

@@ -1,16 +1,43 @@
 import express from 'express';
 import cors from 'cors';
-import authRoutes from './auth.js';
+import cookieParser from 'cookie-parser';
 
-const PORT = 5000;
+import authRoutes from './auth.js'; // ✅ matches your file
 
 const app = express();
 
-app.use(cors({ origin: 'http://localhost:5173' }));
+// =======================
+// MIDDLEWARE (ORDER MATTERS)
+// =======================
+
+// CORS — REQUIRED
+app.use(cors({
+  origin: 'http://localhost:5173', // Vite frontend
+  credentials: true
+}));
+
+// JSON parser
 app.use(express.json());
 
+// Cookie parser (for credentials: include)
+app.use(cookieParser());
+
+// =======================
+// ROUTES
+// =======================
 app.use('/api/auth', authRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+// Health check
+app.get('/', (req, res) => {
+  res.send('Backend is running 🚀');
 });
+
+// =======================
+// SERVER
+// =======================
+const PORT = 5000;
+
+app.listen(PORT, () => {
+  console.log(`✅ Backend running at http://localhost:${PORT}`);
+});
+
