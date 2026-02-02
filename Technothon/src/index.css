@@ -1,0 +1,270 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    --background: 222 47% 5%;
+    --foreground: 210 40% 96%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 173 58% 39%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 90%;
+
+    --muted: 217 33% 14%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 5%;
+
+    --border: 217 33% 18%;
+    --input: 217 33% 15%;
+    --ring: 173 58% 39%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 173 58% 39%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 217 33% 12%;
+    --sidebar-accent-foreground: 210 40% 90%;
+    --sidebar-border: 217 33% 15%;
+    --sidebar-ring: 173 58% 39%;
+
+    /* Custom tokens */
+    --chat-user: 173 58% 25%;
+    --chat-ai: 217 33% 12%;
+    --sql-highlight: 217 91% 60%;
+    --glow-primary: 173 58% 39%;
+    --glow-accent: 217 91% 60%;
+  }
+
+  .light {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 173 58% 35%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 92%;
+    --muted-foreground: 215 20% 40%;
+
+    --accent: 217 91% 55%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 71% 40%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 38 92% 45%;
+    --warning-foreground: 222 47% 11%;
+
+    --border: 214 32% 85%;
+    --input: 214 32% 88%;
+    --ring: 173 58% 35%;
+
+    --sidebar-background: 210 40% 96%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 173 58% 35%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 210 40% 92%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 88%;
+    --sidebar-ring: 173 58% 35%;
+
+    --chat-user: 173 58% 90%;
+    --chat-ai: 210 40% 95%;
+    --sql-highlight: 217 91% 50%;
+    --glow-primary: 173 58% 35%;
+    --glow-accent: 217 91% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 rounded-xl;
+    box-shadow: 
+      0 0 0 1px hsl(var(--border) / 0.1),
+      0 4px 6px -1px hsl(var(--background) / 0.4),
+      0 2px 4px -2px hsl(var(--background) / 0.2);
+  }
+
+  .glass-card-elevated {
+    @apply glass-card;
+    box-shadow: 
+      0 0 0 1px hsl(var(--border) / 0.15),
+      0 10px 15px -3px hsl(var(--background) / 0.5),
+      0 4px 6px -4px hsl(var(--background) / 0.3),
+      0 0 40px -10px hsl(var(--glow-primary) / 0.15);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px -5px hsl(var(--glow-primary) / 0.4);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px -5px hsl(var(--glow-accent) / 0.4);
+  }
+
+  .chat-bubble-user {
+    @apply bg-[hsl(var(--chat-user))] text-foreground rounded-2xl rounded-br-md;
+  }
+
+  .chat-bubble-ai {
+    @apply bg-[hsl(var(--chat-ai))] text-foreground rounded-2xl rounded-bl-md border border-border/50;
+  }
+
+  .sql-code-block {
+    @apply bg-muted/50 rounded-lg border border-border/50 font-mono text-sm;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium 
+           bg-secondary/80 text-secondary-foreground border border-border/50
+           hover:bg-secondary hover:border-primary/30 transition-all duration-200 cursor-pointer;
+  }
+
+  .chip-active {
+    @apply bg-primary/20 text-primary border-primary/50;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .status-online {
+    @apply bg-success animate-pulse;
+  }
+
+  .status-offline {
+    @apply bg-muted-foreground;
+  }
+
+  .skeleton {
+    @apply bg-gradient-to-r from-muted via-muted/50 to-muted bg-[length:200%_100%] animate-shimmer rounded;
+  }
+
+  .table-header {
+    @apply bg-muted/50 text-muted-foreground text-xs font-semibold uppercase tracking-wider;
+  }
+
+  .table-row-hover {
+    @apply hover:bg-muted/30 transition-colors duration-150;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .border-glow {
+    @apply border border-primary/30;
+    box-shadow: 0 0 10px -3px hsl(var(--primary) / 0.3);
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
