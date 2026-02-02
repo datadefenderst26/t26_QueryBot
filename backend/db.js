@@ -1,11 +1,11 @@
 import mysql from 'mysql2/promise';
 
 const db = mysql.createPool({
-  host: 'lshortline.proxy.rlwy.net',
+  host: 'shortline.proxy.rlwy.net',
   user: 'root',
   password: 'fJzOwwhhtGkzZxNPtIpyQaComwRFUGSQ',
   database: 'railway',
-  port: 3306,          
+  port: 13262,          
   ssl: { rejectUnauthorized: false }
 });
 
