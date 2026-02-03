@@ -139,20 +139,19 @@ const Index = () => {
       {/* MAIN CONTENT */}
       <div className="flex-1 flex flex-col min-w-0">
 
-        {/* HEADER */}
         <header className="h-14 border-b border-border/50 flex items-center justify-between px-4 bg-card/50 backdrop-blur-sm">
-          <div className="flex items-center gap-2">
-  <img
-    src="/QueryBot_logo.png"
-    alt="QueryBot Logo"
-    className="h-7 w-7 object-contain"
-  />
-  <h1 className="font-semibold text-lg hidden sm:block">
-    Query<span className="text-gradient-primary">Bot</span>
-  </h1>
-</div>
+  <div className="flex items-center gap-2">
+    <img
+      src="/QueryBot_logo.png"
+      alt="QueryBot Logo"
+      className="h-8 w-8 object-contain"
+    />
+    <h1 className="font-semibold text-lg hidden sm:block">
+      Query<span className="text-gradient-primary">Bot</span>
+    </h1>
+  </div>
+</header>
 
-        </header>
 
         {/* TABS */}
         <Tabs
@@ -188,24 +187,36 @@ const Index = () => {
 
               <ResizableHandle withHandle />
 
-              <ResizablePanel defaultSize={50} minSize={30}>
-                <ContextPanel sql={currentSQL} results={currentResults} />
-              </ResizablePanel>
+              <ResizablePanel
+  defaultSize={50}
+  minSize={30}
+  className="flex flex-col min-h-0"
+>
+  <div className="flex-1 min-h-0 overflow-auto">
+    <ContextPanel sql={currentSQL} results={currentResults} />
+  </div>
+</ResizablePanel>
+
             </ResizablePanelGroup>
           </TabsContent>
 
-          {/* ADMIN */}
-          {isAdmin && (
-            <TabsContent
-              value="admin"
-              className="flex-1 m-0 p-4 min-h-0 overflow-auto"
-            >
-              <div className="grid lg:grid-cols-2 gap-4">
-                <AuditLogs />
-                <UserManagement />
-              </div>
-            </TabsContent>
-          )}
+ {/* ADMIN */}
+{isAdmin && (
+  <TabsContent
+    value="admin"
+    className="flex-1 m-0 p-4 min-h-0 overflow-auto"
+  >
+    <div className="flex flex-col gap-6">
+      <div className="glass-card p-4">
+        <AuditLogs />
+      </div>
+
+      <div className="glass-card p-4">
+        <UserManagement />
+      </div>
+    </div>
+  </TabsContent>
+)}
         </Tabs>
       </div>
     </div>
