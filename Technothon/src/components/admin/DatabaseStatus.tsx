@@ -8,15 +8,8 @@ interface DatabaseInfo {
   engine: string;
   isConnected: boolean;
 }
+const mockDatabases: DatabaseInfo[] = [ { id: '1', name: 'Production DB', engine: 'PostgreSQL', isConnected: true }, { id: '2', name: 'Analytics DB', engine: 'PostgreSQL', isConnected: true }, { id: '3', name: 'Staging DB', engine: 'MySQL', isConnected: true }, { id: '4', name: 'Legacy DB', engine: 'SQL Server', isConnected: false }, { id: '5', name: 'Backup DB', engine: 'PostgreSQL', isConnected: false }, { id: '6', name: 'Dev DB', engine: 'SQLite', isConnected: true }, ];
 
-const mockDatabases: DatabaseInfo[] = [
-  { id: '1', name: 'Production DB', engine: 'PostgreSQL', isConnected: true },
-  { id: '2', name: 'Analytics DB', engine: 'PostgreSQL', isConnected: true },
-  { id: '3', name: 'Staging DB', engine: 'MySQL', isConnected: true },
-  { id: '4', name: 'Legacy DB', engine: 'SQL Server', isConnected: false },
-  { id: '5', name: 'Backup DB', engine: 'PostgreSQL', isConnected: false },
-  { id: '6', name: 'Dev DB', engine: 'SQLite', isConnected: true },
-];
 
 export function DatabaseStatus() {
   const connectedCount = mockDatabases.filter(db => db.isConnected).length;
