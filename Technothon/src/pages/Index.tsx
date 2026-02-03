@@ -139,15 +139,13 @@ const Index = () => {
       {/* MAIN CONTENT */}
       <div className="flex-1 flex flex-col min-w-0">
 
-        {/* HEADER */}
         <header className="h-14 border-b border-border/50 flex items-center justify-between px-4 bg-card/50 backdrop-blur-sm">
-          <div className="flex items-center gap-4">
-            <h1 className="font-semibold text-lg hidden sm:block">
-              Query<span className="text-gradient-primary">AI</span>
-            </h1>
-            <DatabaseIndicator engine="postgresql" isConnected />
-          </div>
-        </header>
+  <div className="flex items-center gap-4">
+    <h1 className="font-semibold text-lg hidden sm:block">
+      Query<span className="text-gradient-primary">AI</span>
+    </h1>
+  </div>
+</header>
 
         {/* TABS */}
         <Tabs
@@ -183,9 +181,16 @@ const Index = () => {
 
               <ResizableHandle withHandle />
 
-              <ResizablePanel defaultSize={50} minSize={30}>
-                <ContextPanel sql={currentSQL} results={currentResults} />
-              </ResizablePanel>
+              <ResizablePanel
+  defaultSize={50}
+  minSize={30}
+  className="flex flex-col min-h-0"
+>
+  <div className="flex-1 min-h-0 overflow-auto">
+    <ContextPanel sql={currentSQL} results={currentResults} />
+  </div>
+</ResizablePanel>
+
             </ResizablePanelGroup>
           </TabsContent>
 
