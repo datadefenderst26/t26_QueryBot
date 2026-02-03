@@ -18,9 +18,7 @@ const Login = () => {
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -30,17 +28,9 @@ const Login = () => {
         alert(data.message || "Login failed");
         return;
       }
-      // ✅ Save logged-in user (SOURCE OF TRUTH)
-localStorage.setItem("user", JSON.stringify(data.user));
 
-
-      // ✅ ROLE-BASED NAVIGATION (FROM BACKEND ONLY)
-      if (data.user.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
-
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/");
     } catch (err) {
       console.error("FETCH ERROR:", err);
       alert("Backend not reachable");
@@ -50,76 +40,79 @@ localStorage.setItem("user", JSON.stringify(data.user));
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      {/* Background glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-      </div>
+    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#020617] to-black px-4 overflow-hidden">
+      
+      {/* Ambient blobs */}
+      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-3xl" />
+      <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-3xl" />
 
-      {/* Login Card */}
+      {/* Card */}
       <div className="relative w-full max-w-md">
-        <div className="glass-card-elevated p-8 space-y-8">
+        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-8 space-y-8">
+
           {/* Header */}
           <div className="text-center space-y-3">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 glow-primary mb-2">
-              <Database className="w-8 h-8 text-primary" />
+            <div className="mx-auto flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-500 shadow-lg">
+              <Database className="w-8 h-8 text-black" />
             </div>
-            <h1 className="text-3xl font-bold">
-              Query<span className="text-gradient-primary">Bot</span>
+
+            <h1 className="text-3xl font-extrabold tracking-tight text-white">
+              Query<span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">Bot</span>
             </h1>
-            <p className="text-muted-foreground">AI-powered SQL Assistant</p>
+
+            <p className="text-sm text-gray-400">
+              AI-powered SQL Assistant
+            </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            
             {/* Email */}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-1">
+              <Label className="text-gray-300">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
-                  id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-black/40 border-white/10 text-white placeholder:text-gray-500 focus:border-cyan-400 focus:ring-cyan-400"
                   required
                 />
               </div>
             </div>
 
             {/* Password */}
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <div className="space-y-1">
+              <Label className="text-gray-300">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
-                  id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-black/40 border-white/10 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                   required
                 />
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Button */}
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 text-lg"
+              className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-500 text-black hover:opacity-90 transition-all shadow-lg"
             >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
           {/* Footer */}
-          <p className="text-center text-xs text-muted-foreground">
-            By signing in, you agree to our Terms of Service
+          <p className="text-center text-xs text-gray-500">
+            Secure login · Powered by QueryBot AI
           </p>
         </div>
       </div>
