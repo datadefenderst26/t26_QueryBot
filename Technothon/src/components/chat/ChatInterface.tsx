@@ -4,7 +4,7 @@ import { ChatBubble } from './ChatBubble';
 import { ChatInput } from './ChatInput';
 import { PromptChips } from './PromptChips';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Database, Sparkles } from 'lucide-react';
+import {  Sparkles } from 'lucide-react';
 import { mockQueryResult } from '@/data/mockData';
 
 interface ChatInterfaceProps {
@@ -104,19 +104,19 @@ LIMIT 100;`;
       {/* Chat Messages */}
       <ScrollArea className="flex-1 px-4" ref={scrollRef}>
         {isEmpty ? (
-          <div className="flex flex-col items-center justify-center h-full py-12 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 animate-float">
-              <Database className="w-8 h-8 text-primary" />
-            </div>
-            <h2 className="text-2xl font-semibold mb-2">
-              Welcome to <span className="text-gradient-primary">QueryAI</span>
-            </h2>
-            <p className="text-muted-foreground max-w-md mb-8">
-              Ask questions about your data in plain English. I'll generate SQL queries and visualize the results for you.
-            </p>
-            <PromptChips onSelectPrompt={handleSendMessage} />
-          </div>
-        ) : (
+  <div className="flex flex-col items-center mt-28 text-center">
+    <h2 className="text-3xl font-bold mb-3 tracking-tight">
+      Welcome to <span className="text-gradient-primary">QueryBot</span>
+    </h2>
+
+    <p className="text-muted-foreground max-w-md mb-8">
+      Ask questions about your data in plain English. I'll generate SQL queries and visualize the results for you.
+    </p>
+
+    <PromptChips onSelectPrompt={handleSendMessage} />
+  </div>
+) : (
+
           <div className="space-y-6 py-6">
             {messages.map((message) => (
               <ChatBubble 

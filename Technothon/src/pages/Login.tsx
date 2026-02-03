@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Database, Mail, Lock } from "lucide-react";
+import {  Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,8 +63,13 @@ navigate("/");
           {/* Header */}
           <div className="text-center space-y-3">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 glow-primary mb-2">
-              <Database className="w-8 h-8 text-primary" />
-            </div>
+  <img
+    src="/QueryBot_logo.png"
+    alt="QueryBot Logo"
+    className="h-12 w-12 object-contain"
+  />
+</div>
+
             <h1 className="text-3xl font-bold">
               Query<span className="text-gradient-primary">Bot</span>
             </h1>

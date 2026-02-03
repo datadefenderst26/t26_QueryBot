@@ -79,9 +79,14 @@ export function AppSidebar({
         {!isCollapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center glow-primary">
-              <Database className="w-4 h-4 text-primary" />
-            </div>
-            <span className="font-semibold">QueryAI</span>
+  <img
+    src="/QueryBot_logo.png"
+    alt="QueryBot Logo"
+    className="h-6 w-6 object-contain"
+  />
+</div>
+<span className="font-semibold">QueryBot</span>
+
           </div>
         )}
 

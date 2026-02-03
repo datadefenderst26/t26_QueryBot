@@ -141,12 +141,17 @@ const Index = () => {
 
         {/* HEADER */}
         <header className="h-14 border-b border-border/50 flex items-center justify-between px-4 bg-card/50 backdrop-blur-sm">
-          <div className="flex items-center gap-4">
-            <h1 className="font-semibold text-lg hidden sm:block">
-              Query<span className="text-gradient-primary">AI</span>
-            </h1>
-            <DatabaseIndicator engine="postgresql" isConnected />
-          </div>
+          <div className="flex items-center gap-2">
+  <img
+    src="/QueryBot_logo.png"
+    alt="QueryBot Logo"
+    className="h-7 w-7 object-contain"
+  />
+  <h1 className="font-semibold text-lg hidden sm:block">
+    Query<span className="text-gradient-primary">Bot</span>
+  </h1>
+</div>
+
         </header>
 
         {/* TABS */}
