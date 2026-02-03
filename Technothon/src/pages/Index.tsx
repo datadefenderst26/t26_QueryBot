@@ -189,18 +189,23 @@ const Index = () => {
             </ResizablePanelGroup>
           </TabsContent>
 
-          {/* ADMIN */}
-          {isAdmin && (
-            <TabsContent
-              value="admin"
-              className="flex-1 m-0 p-4 min-h-0 overflow-auto"
-            >
-              <div className="grid lg:grid-cols-2 gap-4">
-                <AuditLogs />
-                <UserManagement />
-              </div>
-            </TabsContent>
-          )}
+ {/* ADMIN */}
+{isAdmin && (
+  <TabsContent
+    value="admin"
+    className="flex-1 m-0 p-4 min-h-0 overflow-auto"
+  >
+    <div className="flex flex-col gap-6">
+      <div className="glass-card p-4">
+        <AuditLogs />
+      </div>
+
+      <div className="glass-card p-4">
+        <UserManagement />
+      </div>
+    </div>
+  </TabsContent>
+)}
         </Tabs>
       </div>
     </div>
