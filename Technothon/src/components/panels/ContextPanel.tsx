@@ -19,14 +19,14 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'sql' | 'table' | 'charts'>('sql');
 
-  // ✅ AUTO SWITCH TO TABLE TAB WHEN RESULTS ARRIVE
+  // ✅ Auto-switch to Table tab when results arrive
   useEffect(() => {
     if (results) {
       setActiveTab('table');
     }
   }, [results]);
 
-  // Transform results for charts
+  // Chart data
   const barChartData =
     results?.rows.slice(0, 6).map(row => ({
       name: String(row[results.columns[0]]).slice(0, 10),
@@ -62,7 +62,11 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as any)}
+        className="flex-1 flex flex-col"
+      >
         <div className="px-4 pt-4">
           <TabsList className="glass-card p-1 w-full justify-start">
             <TabsTrigger value="sql" className="gap-2 data-[state=active]:bg-primary/20">
@@ -85,11 +89,7 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
             {isLoading ? (
               <LoadingSkeleton type="sql" />
             ) : sql ? (
-              <SQLPanel
-                sql={sql}
-                onExecute={() => console.log('Execute query')}
-                onShowSafetyModal={() => setShowSafetyModal(true)}
-              />
+              <SQLPanel sql={sql} />
             ) : null}
           </TabsContent>
 
@@ -100,7 +100,7 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
               <DataTable
                 result={results}
                 onExportCSV={() => console.log('Export CSV')}
-                onExportSheets={() => console.log('Export to Sheets')}
+                onExportSheets={() => console.log('Export Sheets')}
               />
             ) : null}
           </TabsContent>
@@ -145,10 +145,7 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
       <SafetyModal
         open={showSafetyModal}
         onClose={() => setShowSafetyModal(false)}
-        onConfirm={() => {
-          setShowSafetyModal(false);
-          console.log('Confirmed destructive operation');
-        }}
+        onConfirm={() => setShowSafetyModal(false)}
         sql={sql || ''}
         affectedTables={['orders', 'order_items']}
         estimatedRows={89}
