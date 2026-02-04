@@ -42,10 +42,10 @@ const Index = () => {
   const [isDark, setIsDark] = useState(true);
   const [user, setUser] = useState<any>(null);
 
-  // 🔥 NEW: sidebar mode
+  //  NEW: sidebar mode
   const [sidebarView, setSidebarView] = useState<"chats" | "settings">("chats");
 
-  // 🔐 AUTH
+  //  AUTH
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
@@ -99,7 +99,7 @@ const Index = () => {
         sidebarView={sidebarView}
       >
 
-        {/* 🔧 SETTINGS PANEL (INSIDE SIDEBAR) */}
+        {/*  SETTINGS PANEL (INSIDE SIDEBAR) */}
         {sidebarView === "settings" && (
           <div className="p-4 space-y-6">
 

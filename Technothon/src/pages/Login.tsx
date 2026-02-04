@@ -31,14 +31,14 @@ const Login = () => {
   return;
 }
 
-// ✅ SAVE USER FROM BACKEND (SOURCE OF TRUTH)
+//  SAVE USER FROM BACKEND (SOURCE OF TRUTH)
 localStorage.setItem("user", JSON.stringify(data.user));
 
-// ✅ ROLE-BASED NAVIGATION
-// ✅ SAVE USER FROM BACKEND (SOURCE OF TRUTH)
+// ROLE-BASED NAVIGATION
+// SAVE USER FROM BACKEND (SOURCE OF TRUTH)
 localStorage.setItem("user", JSON.stringify(data.user));
 
-// ✅ ALWAYS GO TO MAIN PAGE
+//  ALWAYS GO TO MAIN PAGE
 navigate("/");
 
     } catch (err) {

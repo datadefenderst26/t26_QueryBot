@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-// 🔐 auth middleware
+//  auth middleware
 const auth = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.sendStatus(401);
@@ -16,7 +16,7 @@ const auth = (req, res, next) => {
   });
 };
 
-// ⭐ Add favorite
+//  Add favorite
 router.post("/add", auth, (req, res) => {
   const { query_name, route } = req.body;
 
@@ -30,7 +30,7 @@ router.post("/add", auth, (req, res) => {
   );
 });
 
-// 📥 Get favorites
+// Get favorites
 router.get("/", auth, (req, res) => {
   db.query(
     "SELECT id, query_name, route FROM favorites WHERE user_id = ?",
