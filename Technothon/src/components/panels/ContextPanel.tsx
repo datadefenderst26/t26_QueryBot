@@ -26,24 +26,29 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
     }
   }, [results]);
 
+  // 🔒 Safe guards for real backend data (n8n)
+const safeRows = results?.rows ?? [];
+const safeColumns = results?.columns ?? [];
+
   // Chart data
-  const barChartData =
-    results?.rows.slice(0, 6).map(row => ({
-      name: String(row[results.columns[0]]).slice(0, 10),
-      value: Number(row[results.columns[2]]) || 0,
-    })) || [];
+  // 📊 Bar chart data
+const barChartData = safeRows.slice(0, 6).map((row) => ({
+  name: String(row?.[safeColumns[0]] ?? "").slice(0, 10),
+  value: Number(row?.[safeColumns[2]]) || 0,
+}));
 
-  const lineChartData =
-    results?.rows.slice(0, 6).map(row => ({
-      name: String(row[results.columns[0]]).slice(0, 10),
-      value: Number(row[results.columns[1]]) || 0,
-    })) || [];
+// 📈 Line chart data
+const lineChartData = safeRows.slice(0, 6).map((row) => ({
+  name: String(row?.[safeColumns[0]] ?? "").slice(0, 10),
+  value: Number(row?.[safeColumns[1]]) || 0,
+}));
 
-  const pieChartData =
-    results?.rows.slice(0, 4).map(row => ({
-      name: String(row[results.columns[3] || results.columns[0]]),
-      value: Number(row[results.columns[2] || results.columns[1]]) || 1,
-    })) || [];
+// 🥧 Pie chart data
+const pieChartData = safeRows.slice(0, 4).map((row) => ({
+  name: String(row?.[safeColumns[3] ?? safeColumns[0]] ?? ""),
+  value: Number(row?.[safeColumns[2] ?? safeColumns[1]]) || 1,
+}));
+
 
   if (!sql && !results && !isLoading) {
     return (

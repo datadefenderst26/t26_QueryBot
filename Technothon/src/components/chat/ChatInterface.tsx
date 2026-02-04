@@ -42,7 +42,7 @@ export function ChatInterface({ onQueryGenerated }: ChatInterfaceProps) {
   try {
     // 2️⃣ Send prompt to n8n webhook
     const res = await fetch(
-      "https://datadefenders.app.n8n.cloud/webhook/querybot_t26", // 👈 your n8n webhook URL
+      "https://datadefenders.app.n8n.cloud/webhook/querybot_t26", // 
       {
         method: "POST",
         headers: {

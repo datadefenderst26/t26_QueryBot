@@ -18,6 +18,7 @@ export function SQLPanel({ sql }: SQLPanelProps) {
   const [copied, setCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
+   console.log("SQLPanel received SQL:", sql);
   const handleCopy = () => {
     navigator.clipboard.writeText(sql);
     setCopied(true);

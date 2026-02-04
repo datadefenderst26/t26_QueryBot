@@ -34,6 +34,12 @@ export function DataTable({ result, onExportCSV, onExportSheets }: DataTableProp
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [filter, setFilter] = useState('');
+  // 🔒 HARD SAFETY for real backend data
+const safeRows = Array.isArray(result.rows) ? result.rows : [];
+const safeColumns = Array.isArray(result.columns) ? result.columns : [];
+const rowCount = typeof result.rowCount === 'number' ? result.rowCount : safeRows.length;
+const executionTime = result.executionTime ?? 0;
+
 
   const handleSort = (column: string) => {
     if (sortColumn === column) {
@@ -49,7 +55,8 @@ export function DataTable({ result, onExportCSV, onExportSheets }: DataTableProp
     }
   };
 
-  const sortedRows = [...result.rows].sort((a, b) => {
+  const sortedRows = [...safeRows].sort((a, b) => {
+
     if (!sortColumn || !sortDirection) return 0;
     
     const aVal = a[sortColumn];
@@ -90,11 +97,12 @@ export function DataTable({ result, onExportCSV, onExportSheets }: DataTableProp
         <div className="flex items-center gap-4">
           <h3 className="font-medium text-sm">Query Results</h3>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>{result.rowCount} rows</span>
+            <span>{rowCount} rows</span>
+
             <span>•</span>
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
-              {result.executionTime}s
+              {executionTime}s
             </div>
           </div>
         </div>
@@ -136,7 +144,8 @@ export function DataTable({ result, onExportCSV, onExportSheets }: DataTableProp
         <Table>
           <TableHeader>
             <TableRow className="table-header hover:bg-transparent">
-              {result.columns.map((column) => (
+              {safeColumns.map((column) => (
+
                 <TableHead 
                   key={column}
                   className="cursor-pointer select-none"
@@ -162,7 +171,8 @@ export function DataTable({ result, onExportCSV, onExportSheets }: DataTableProp
             {filteredRows.length === 0 ? (
               <TableRow>
                 <TableCell 
-                  colSpan={result.columns.length} 
+                  colSpan={safeColumns.length}
+ 
                   className="text-center py-8 text-muted-foreground"
                 >
                   No results found
@@ -175,7 +185,8 @@ export function DataTable({ result, onExportCSV, onExportSheets }: DataTableProp
                   className="table-row-hover animate-fade-in"
                   style={{ animationDelay: `${index * 20}ms` }}
                 >
-                  {result.columns.map((column) => (
+                  {safeColumns.map((column) => (
+
                     <TableCell 
                       key={column}
                       className={cn(
