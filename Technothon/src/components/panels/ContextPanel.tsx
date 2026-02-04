@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { QueryResult } from '@/types';
 import { SQLPanel } from '@/components/sql/SQLPanel';
 import { SafetyModal } from '@/components/sql/SafetyModal';
@@ -7,7 +7,7 @@ import { ChartWidget } from '@/components/data/ChartWidget';
 import { LoadingSkeleton } from '@/components/data/LoadingSkeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Code, Table2, BarChart3, Database } from 'lucide-react';
+import { Code, Table2, BarChart3 } from 'lucide-react';
 
 interface ContextPanelProps {
   sql: string | null;
@@ -17,40 +17,48 @@ interface ContextPanelProps {
 
 export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
   const [showSafetyModal, setShowSafetyModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('sql');
+  const [activeTab, setActiveTab] = useState<'sql' | 'table' | 'charts'>('sql');
+
+  // ✅ AUTO SWITCH TO TABLE TAB WHEN RESULTS ARRIVE
+  useEffect(() => {
+    if (results) {
+      setActiveTab('table');
+    }
+  }, [results]);
 
   // Transform results for charts
-  const barChartData = results?.rows.slice(0, 6).map(row => ({
-    name: String(row[results.columns[0]]).slice(0, 10),
-    value: Number(row[results.columns[2]]) || 0,
-  })) || [];
+  const barChartData =
+    results?.rows.slice(0, 6).map(row => ({
+      name: String(row[results.columns[0]]).slice(0, 10),
+      value: Number(row[results.columns[2]]) || 0,
+    })) || [];
 
-  const lineChartData = results?.rows.slice(0, 6).map(row => ({
-    name: String(row[results.columns[0]]).slice(0, 10),
-    value: Number(row[results.columns[1]]) || 0,
-  })) || [];
+  const lineChartData =
+    results?.rows.slice(0, 6).map(row => ({
+      name: String(row[results.columns[0]]).slice(0, 10),
+      value: Number(row[results.columns[1]]) || 0,
+    })) || [];
 
-  const pieChartData = results?.rows.slice(0, 4).map(row => ({
-    name: String(row[results.columns[3] || results.columns[0]]),
-    value: Number(row[results.columns[2] || results.columns[1]]) || 1,
-  })) || [];
+  const pieChartData =
+    results?.rows.slice(0, 4).map(row => ({
+      name: String(row[results.columns[3] || results.columns[0]]),
+      value: Number(row[results.columns[2] || results.columns[1]]) || 1,
+    })) || [];
 
- if (!sql && !results && !isLoading) {
-  return (
-    <div className="h-full flex items-center justify-center">
-      <div className="text-center space-y-3">
-        <h3 className="text-lg font-semibold">
-          No <span className="text-gradient-primary">Query Results</span>
-        </h3>
-        <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-          Ask a question in chat to generate SQL and visualize insights instantly.
-        </p>
-
+  if (!sql && !results && !isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <h3 className="text-lg font-semibold">
+            No <span className="text-gradient-primary">Query Results</span>
+          </h3>
+          <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+            Ask a question in chat to generate SQL and visualize insights instantly.
+          </p>
         </div>
-    </div>
-  );
-}
-
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col">
@@ -77,8 +85,8 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
             {isLoading ? (
               <LoadingSkeleton type="sql" />
             ) : sql ? (
-              <SQLPanel 
-                sql={sql} 
+              <SQLPanel
+                sql={sql}
                 onExecute={() => console.log('Execute query')}
                 onShowSafetyModal={() => setShowSafetyModal(true)}
               />
@@ -89,7 +97,7 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
             {isLoading ? (
               <LoadingSkeleton type="table" />
             ) : results ? (
-              <DataTable 
+              <DataTable
                 result={results}
                 onExportCSV={() => console.log('Export CSV')}
                 onExportSheets={() => console.log('Export to Sheets')}

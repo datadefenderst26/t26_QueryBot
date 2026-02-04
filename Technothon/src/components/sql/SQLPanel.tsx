@@ -11,11 +11,10 @@ import {
 
 interface SQLPanelProps {
   sql: string;
-  onExecute?: () => void;
-  onShowSafetyModal?: () => void;
 }
 
-export function SQLPanel({ sql, onExecute, onShowSafetyModal }: SQLPanelProps) {
+
+export function SQLPanel({ sql }: SQLPanelProps) {
   const [copied, setCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -48,7 +47,8 @@ export function SQLPanel({ sql, onExecute, onShowSafetyModal }: SQLPanelProps) {
   };
 
   return (
-    <div className="glass-card overflow-hidden">
+<div className="glass-card">
+
       <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
         <CollapsibleTrigger asChild>
           <div className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-muted/30 transition-colors">
@@ -76,49 +76,37 @@ export function SQLPanel({ sql, onExecute, onShowSafetyModal }: SQLPanelProps) {
 
         <CollapsibleContent>
           <div className="px-4 pb-4">
-            <div className="sql-code-block p-4 overflow-x-auto">
-              <pre 
-                className="text-sm leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: formatSQL(sql) }}
-              />
-            </div>
+            <div className="sql-code-block p-4 max-h-[300px] overflow-auto">
+  <pre
+    className="text-sm leading-relaxed whitespace-pre-wrap"
+    dangerouslySetInnerHTML={{ __html: formatSQL(sql) }}
+  />
+</div>
 
-            <div className="flex items-center justify-between mt-3">
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={handleCopy}
-                  className="h-8 text-xs"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-3 h-3 mr-1 text-success" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3 h-3 mr-1" />
-                      Copy SQL
-                    </>
-                  )}
-                </Button>
-              </div>
 
-              <Button 
-                size="sm"
-                onClick={isDestructive ? onShowSafetyModal : onExecute}
-                className={cn(
-                  "h-8",
-                  isDestructive 
-                    ? "bg-destructive hover:bg-destructive/90" 
-                    : "bg-accent hover:bg-accent/90 glow-accent"
-                )}
-              >
-                <Play className="w-3 h-3 mr-1" />
-                {isDestructive ? 'Review & Execute' : 'Run Query'}
-              </Button>
-            </div>
+           <div className="flex items-center justify-between mt-3">
+  <div className="flex items-center gap-2">
+    <Button 
+      variant="ghost" 
+      size="sm" 
+      onClick={handleCopy}
+      className="h-8 text-xs"
+    >
+      {copied ? (
+        <>
+          <Check className="w-3 h-3 mr-1 text-success" />
+          Copied
+        </>
+      ) : (
+        <>
+          <Copy className="w-3 h-3 mr-1" />
+          Copy SQL
+        </>
+      )}
+    </Button>
+  </div>
+</div>
+
           </div>
         </CollapsibleContent>
       </Collapsible>
