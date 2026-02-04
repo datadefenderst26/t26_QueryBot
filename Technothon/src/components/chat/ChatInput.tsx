@@ -11,16 +11,18 @@ import {
 
 interface ChatInputProps {
   onSend: (message: string) => void;
-  disabled?: boolean;
+  isLoading?: boolean;
 }
 
-export function ChatInput({ onSend, disabled }: ChatInputProps) {
+export function ChatInput({ onSend, isLoading }: ChatInputProps) {
+
   const [message, setMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
-    if (message.trim() && !disabled) {
+    if (message.trim() && !isLoading) {
+
       onSend(message.trim());
       setMessage('');
       if (textareaRef.current) {
@@ -59,7 +61,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
             onKeyDown={handleKeyDown}
             onInput={handleInput}
             placeholder="Ask a question about your data..."
-            disabled={disabled}
+             disabled={isLoading}
             className="min-h-[44px] max-h-[200px] resize-none bg-muted/50 border-border/50 focus:border-primary/50 pr-10"
             rows={1}
           />
@@ -100,7 +102,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
           <Button 
             onClick={handleSend}
-            disabled={!message.trim() || disabled}
+            disabled={!message.trim() || isLoading}
             className="h-10 px-4 bg-accent hover:bg-accent/90 glow-accent"
           >
             <Send className="w-4 h-4" />

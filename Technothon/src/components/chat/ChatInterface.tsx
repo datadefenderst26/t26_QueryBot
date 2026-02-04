@@ -5,11 +5,12 @@ import { ChatInput } from './ChatInput';
 import { PromptChips } from './PromptChips';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {  Sparkles } from 'lucide-react';
-import { mockQueryResult } from '@/data/mockData';
+import { QueryResult } from "@/types";
 
 interface ChatInterfaceProps {
-  onQueryGenerated: (sql: string, results: typeof mockQueryResult) => void;
+  onQueryGenerated: (sql: string, results: QueryResult) => void;
 }
+
 
 export function ChatInterface({ onQueryGenerated }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -26,130 +27,114 @@ export function ChatInterface({ onQueryGenerated }: ChatInterfaceProps) {
     scrollToBottom();
   }, [messages]);
 
-  const generateMockSQL = (prompt: string): string => {
-    // Mock SQL generation based on prompt keywords
-    if (prompt.toLowerCase().includes('customer')) {
-      return `SELECT 
-  c.name AS customer_name,
-  COUNT(o.id) AS total_orders,
-  SUM(o.total) AS total_revenue,
-  c.segment
-FROM customers c
-LEFT JOIN orders o ON c.id = o.customer_id
-WHERE o.created_at >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '6 months')
-GROUP BY c.id, c.name, c.segment
-ORDER BY total_revenue DESC
-LIMIT 10;`;
-    }
-    if (prompt.toLowerCase().includes('sales') || prompt.toLowerCase().includes('trend')) {
-      return `SELECT 
-  DATE_TRUNC('month', created_at) AS month,
-  COUNT(*) AS order_count,
-  SUM(total) AS revenue
-FROM orders
-WHERE created_at >= DATE_TRUNC('year', CURRENT_DATE)
-GROUP BY DATE_TRUNC('month', created_at)
-ORDER BY month ASC;`;
-    }
-    if (prompt.toLowerCase().includes('stock') || prompt.toLowerCase().includes('inventory')) {
-      return `SELECT 
-  name,
-  category,
-  stock,
-  price
-FROM products
-WHERE stock < 10
-ORDER BY stock ASC;`;
-    }
-    return `SELECT * FROM orders
-WHERE status = 'completed'
-ORDER BY created_at DESC
-LIMIT 100;`;
+  const handleSendMessage = async (content: string) => {
+  // 1️⃣ Add user message to UI
+  const userMessage: ChatMessage = {
+    id: Date.now().toString(),
+    role: 'user',
+    content,
+    timestamp: new Date(),
   };
 
-  const handleSendMessage = async (content: string) => {
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      role: 'user',
-      content,
-      timestamp: new Date(),
-    };
+  setMessages(prev => [...prev, userMessage]);
+  setIsLoading(true);
 
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
+  try {
+    // 2️⃣ Send prompt to n8n webhook
+    const res = await fetch(
+      "https://datadefenders.app.n8n.cloud/webhook/querybot_t26", // 👈 your n8n webhook URL
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: content }),
+      }
+    );
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const data = await res.json();
 
-    const sql = generateMockSQL(content);
-    
+    // 3️⃣ Add assistant message with REAL backend response
     const aiMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
       role: 'assistant',
-      content: `I've analyzed your request and generated the following SQL query. The results show the top performers based on your criteria.\n\nThe query joins the relevant tables and applies appropriate filters to get you the most accurate data.`,
+      content: "Here are the results based on your request.",
       timestamp: new Date(),
-      sql,
-      results: mockQueryResult,
+      sql: data.sql,
+      results: data.results,
     };
 
     setMessages(prev => [...prev, aiMessage]);
+
+    // 4️⃣ Send results upward (table / chart)
+    onQueryGenerated(data.sql, data.results);
+
+  } catch (error) {
+    console.error("Backend (n8n) error:", error);
+  } finally {
     setIsLoading(false);
-    onQueryGenerated(sql, mockQueryResult);
-  };
+  }
+};
+
 
   const isEmpty = messages.length === 0;
 
   return (
     <div className="flex flex-col h-full">
       {/* Chat Messages */}
-      <ScrollArea className="flex-1 px-4" ref={scrollRef}>
-        {isEmpty ? (
-  <div className="flex flex-col items-center mt-28 text-center">
-    <h2 className="text-3xl font-bold mb-3 tracking-tight">
-      Welcome to <span className="text-gradient-primary">QueryBot</span>
-    </h2>
+      {/* Chat Messages */}
+<ScrollArea className="flex-1 px-4">
+  <div ref={scrollRef}>
+    {isEmpty ? (
+      <div className="flex flex-col items-center mt-28 text-center">
+        <h2 className="text-3xl font-bold mb-3 tracking-tight">
+          Welcome to <span className="text-gradient-primary">QueryBot</span>
+        </h2>
 
-    <p className="text-muted-foreground max-w-md mb-8">
-      Ask questions about your data in plain English. I'll generate SQL queries and visualize the results for you.
-    </p>
+        <p className="text-muted-foreground max-w-md mb-8">
+          Ask questions about your data in plain English. I'll generate SQL queries and visualize the results for you.
+        </p>
+      </div>
+    ) : (
+      <div className="space-y-6 py-6">
+        {messages.map((message) => (
+          <ChatBubble 
+            key={message.id} 
+            message={message} 
+            onRefine={() => {}}
+          />
+        ))}
 
-    <PromptChips onSelectPrompt={handleSendMessage} />
-  </div>
-) : (
-
-          <div className="space-y-6 py-6">
-            {messages.map((message) => (
-              <ChatBubble 
-                key={message.id} 
-                message={message} 
-                onRefine={() => {/* Would open refinement modal */}}
-              />
-            ))}
-            {isLoading && (
-              <ChatBubble 
-                message={{
-                  id: 'loading',
-                  role: 'assistant',
-                  content: '',
-                  timestamp: new Date(),
-                  isLoading: true,
-                }} 
-              />
-            )}
-          </div>
+        {isLoading && (
+          <ChatBubble 
+            message={{
+              id: 'loading',
+              role: 'assistant',
+              content: '',
+              timestamp: new Date(),
+              isLoading: true,
+            }} 
+          />
         )}
-      </ScrollArea>
+      </div>
+    )}
+  </div>
+</ScrollArea>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-border/50">
-        {!isEmpty && (
-          <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
-            <Sparkles className="w-3 h-3" />
-            <span>Try: "Show monthly trends" or "Find low stock items"</span>
-          </div>
-        )}
-        <ChatInput onSend={handleSendMessage} disabled={isLoading} />
-      </div>
+<div className="p-4 border-t border-border/50">
+  {!isEmpty && (
+    <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
+      <Sparkles className="w-3 h-3" />
+      <span>Try: "Show monthly trends" or "Find low stock items"</span>
     </div>
+  )}
+
+  <ChatInput
+    isLoading={isLoading}
+    onSend={handleSendMessage}
+  />
+</div>
+</div>
   );
 }
