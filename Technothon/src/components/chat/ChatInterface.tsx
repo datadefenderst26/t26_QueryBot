@@ -56,13 +56,14 @@ export function ChatInterface({ onQueryGenerated }: ChatInterfaceProps) {
 
     // 3️⃣ Add assistant message with REAL backend response
     const aiMessage: ChatMessage = {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: "Here are the results based on your request.",
-      timestamp: new Date(),
-      sql: data.sql,
-      results: data.results,
-    };
+  id: (Date.now() + 1).toString(),
+  role: 'assistant',
+  content: data.message,        // ✅ dynamic
+  timestamp: new Date(),
+  sql: data.sql,                // ✅ real SQL from n8n
+  results: data.results,        // ✅ real DB rows
+};
+
 
     setMessages(prev => [...prev, aiMessage]);
 
