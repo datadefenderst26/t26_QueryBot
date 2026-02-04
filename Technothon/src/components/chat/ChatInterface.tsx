@@ -130,10 +130,8 @@ export function ChatInterface({ onQueryGenerated }: ChatInterfaceProps) {
     </div>
   )}
 
-  <ChatInput
-    isLoading={isLoading}
-    onSend={handleSendMessage}
-  />
+  <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
+
 </div>
 </div>
   );

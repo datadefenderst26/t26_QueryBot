@@ -14,7 +14,8 @@ interface ChatInputProps {
   isLoading?: boolean;
 }
 
-export function ChatInput({ onSend, isLoading }: ChatInputProps) {
+export function ChatInput({ onSend, isLoading = false }: ChatInputProps) {
+
 
   const [message, setMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
