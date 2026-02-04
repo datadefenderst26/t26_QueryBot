@@ -35,21 +35,22 @@ export function ContextPanel({ sql, results, isLoading }: ContextPanelProps) {
     value: Number(row[results.columns[2] || results.columns[1]]) || 1,
   })) || [];
 
-  if (!sql && !results && !isLoading) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted/50 flex items-center justify-center">
-            <Database className="w-8 h-8 text-muted-foreground" />
-          </div>
-          <h3 className="font-medium text-muted-foreground mb-2">No Query Results</h3>
-          <p className="text-sm text-muted-foreground/60 max-w-xs mx-auto">
-            Ask a question in the chat to generate SQL queries and visualize your data.
-          </p>
+ if (!sql && !results && !isLoading) {
+  return (
+    <div className="h-full flex items-center justify-center">
+      <div className="text-center space-y-3">
+        <h3 className="text-lg font-semibold">
+          No <span className="text-gradient-primary">Query Results</span>
+        </h3>
+        <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+          Ask a question in chat to generate SQL and visualize insights instantly.
+        </p>
+
         </div>
-      </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   return (
     <div className="h-full flex flex-col">
